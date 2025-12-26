@@ -38,7 +38,6 @@ This creates PDFs in `print_output/` with fading effects. Words related to memor
 - A list of all available people for `present/`
 
 To automatically send to your printer, use `python prepare_materials.py --send-to-printer`.
-```
 
 For setup, copy `.env.template` to `.env` and add your `TYPEFORM_TOKEN`, and run `pip install -r requirements.txt`.
 
