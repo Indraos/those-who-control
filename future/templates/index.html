@@ -1,0 +1,33 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>future</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="camera">
+        <video id="video" autoplay playsinline muted></video>
+        <!-- Offscreen canvas (never shown) -->
+        <canvas id="canvas" class="hidden"></canvas>
+        <div class="controls">
+          <button id="capture" disabled class="icon-btn">📷</button>
+          <button id="generate" disabled>Generate Future</button>
+          <button id="print" disabled class="icon-btn">🖨️</button>
+        </div>
+        <div id="status" class="status">Requesting camera…</div>
+      </div>
+    </div>
+    <div id="tray" class="tray">
+      <div class="thumb"></div>
+      <div class="thumb"></div>
+      <div class="thumb"></div>
+      <div class="thumb"></div>
+      <div class="thumb"></div>
+    </div>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

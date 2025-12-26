@@ -1,0 +1,2 @@
+# Instructions
+To start, type `python main.py [your name]` (no brackets) where your name is listed on the participant context. You can start with a simple "hello" or anything in life you're currently thinking about. If your name is not on the participant list, type `python main.py unknown`.

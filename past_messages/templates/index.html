@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Messages - AI Continuation</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Past Messages</h1>
+        <p class="subtitle">Upload a conversation export and let AI continue it with transformative guidance</p>
+
+        <div class="upload-section">
+            <h2>Upload Message Export</h2>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                Supported formats: WhatsApp, iMessage, Facebook Messenger
+            </p>
+
+            <div class="file-input-wrapper">
+                <input type="file" id="messageFile" accept=".txt,.json,.csv,.db,.pdf">
+                <label for="messageFile" class="file-input-label" id="fileLabel">
+                    Choose file or drag here
+                </label>
+            </div>
+
+            <button class="btn" id="uploadBtn" disabled>Upload & Parse Messages</button>
+        </div>
+
+        <div id="statusContainer"></div>
+
+        <div class="spinner" id="spinner"></div>
+
+        <div id="resultContainer"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('messageFile');
+        const fileLabel = document.getElementById('fileLabel');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const statusContainer = document.getElementById('statusContainer');
+        const spinner = document.getElementById('spinner');
+        const resultContainer = document.getElementById('resultContainer');
+
+        let sessionId = null;
+        let sessionData = null;  // Store full session data
+
+        // File input handling
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                fileLabel.textContent = `Selected: ${fileName}`;
+                fileLabel.classList.add('has-file');
+                uploadBtn.disabled = false;
+            } else {
+                fileLabel.textContent = 'Choose file or drag here';
+                fileLabel.classList.remove('has-file');
+                uploadBtn.disabled = true;
+            }
+        });
+
+        // Drag and drop
+        fileLabel.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileLabel.style.borderColor = '#667eea';
+            fileLabel.style.background = '#e9ecef';
+        });
+
+        fileLabel.addEventListener('dragleave', () => {
+            fileLabel.style.borderColor = '#dee2e6';
+            fileLabel.style.background = '#f8f9fa';
+        });
+
+        fileLabel.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileLabel.style.borderColor = '#dee2e6';
+            fileLabel.style.background = '#f8f9fa';
+
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                const fileName = e.dataTransfer.files[0].name;
+                fileLabel.textContent = `Selected: ${fileName}`;
+                fileLabel.classList.add('has-file');
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Upload handler
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            uploadBtn.disabled = true;
+            spinner.style.display = 'block';
+            statusContainer.innerHTML = '<div class="status processing">Parsing messages...</div>';
+            resultContainer.innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Upload failed');
+                }
+
+                sessionId = data.session_id;
+                sessionData = data;  // Store full data including messages
+                spinner.style.display = 'none';
+
+                statusContainer.innerHTML = `
+                    <div class="status success">
+                        <strong>Messages Parsed Successfully!</strong><br>
+                        Format: ${data.format.toUpperCase()}<br>
+                        Messages: ${data.message_count}<br>
+                        Participants: ${data.participants.join(', ')}
+                    </div>
+                `;
+
+                resultContainer.innerHTML = `
+                    <button class="btn" id="generateBtn" style="margin-top: 20px;">
+                        Generate AI Continuation
+                    </button>
+                `;
+
+                document.getElementById('generateBtn').addEventListener('click', generateContinuation);
+
+            } catch (error) {
+                spinner.style.display = 'none';
+                statusContainer.innerHTML = `
+                    <div class="status error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Generate continuation
+        async function generateContinuation() {
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            spinner.style.display = 'block';
+            statusContainer.innerHTML = '<div class="status processing">Generating AI continuation with GPT-5.1... This may take 10 seconds.</div>';
+
+            try {
+                // Send session data in the request body to avoid volume timing issues
+                const response = await fetch(`/api/generate/${sessionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sessionData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Generation failed');
+                }
+
+                spinner.style.display = 'none';
+
+                statusContainer.innerHTML = `
+                    <div class="status success">
+                        <strong>AI Continuation Generated!</strong><br>
+                        Original messages: ${data.original_count}<br>
+                        AI-generated messages: ${data.generated_count}
+                    </div>
+                `;
+
+                resultContainer.innerHTML = `
+                    <a href="${data.download_url}" class="download-link" download>
+                        Download Complete Conversation (HTML)
+                    </a>
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                        The HTML file contains your original messages plus the AI-generated continuation.
+                        AI messages are marked with a blue border and "AI" indicator.
+                    </p>
+                `;
+
+            } catch (error) {
+                spinner.style.display = 'none';
+                statusContainer.innerHTML = `
+                    <div class="status error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

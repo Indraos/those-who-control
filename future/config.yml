@@ -1,0 +1,41 @@
+scenes:
+  - label: "holidays"
+    prompt: |
+      Hyperrealistic photograph of the SAME people from the input photo.
+      Preserve identity precisely: same faces, skin tone, hair style/color, age, body shapes,
+      height ratios, and relative positions. Keep the same number of people and camera angle.
+      Keep original clothing colors/patterns unless naturally adapted to the scene; no character swaps.
+      Minimal face alteration; no beautification or stylization; photo-real only.
+      Scene change: a sunny Mediterranean beach at golden hour, gentle backlight, ocean and sand behind.
+      Natural candid smiles, light breeze; match input composition and framing as closely as possible.
+
+  - label: "wedding"
+    prompt: |
+      Hyperrealistic photograph of the SAME people from the input photo.
+      Preserve identity precisely: same faces, skin tone, hair style/color, age, body shapes,
+      height ratios, and relative positions. Keep the same number of people and camera angle.
+      Keep original clothing colors/patterns where possible; minimally adapt to formal attire.
+      Minimal face alteration; no beautification or stylization; photo-real only.
+      Scene change: tasteful modern wedding; TWO of the same people are newlyweds near the aisle;
+      the others are nearby as guests; elegant formal ambience, soft natural light, shallow depth of field.
+      Maintain the original composition and spacing between people.
+
+  - label: "old-restaurant"
+    prompt: |
+      Hyperrealistic photograph of the SAME people from the input photo.
+      Preserve identity and recognizable facial features; same hair color (lightly grayed is acceptable),
+      moles/freckles, facial structure, and relative positions. Keep the same number of people.
+      Age progression should be subtle and respectful (wrinkles, gray hair) WITHOUT changing identity.
+      No caricature; photo-real only.
+      Scene change: a cozy restaurant, warm ambient lighting, wooden table, candid conversation.
+      Keep framing and camera angle similar to the input; minimal changes to clothing style.
+
+  - label: "funeral"
+    prompt: |
+      Hyperrealistic photograph of the SAME people from the input photo.
+      Preserve identity precisely: same faces, skin tone, hair style/color, age, body shapes,
+      height ratios, and relative positions. Keep the same camera angle and framing.
+      One original person is respectfully absent; do NOT invent new people; maintain realism.
+      Minimal face alteration; no beautification or stylization; photo-real only.
+      Scene change: solemn funeral setting (church or cemetery), overcast soft light,
+      the remaining people in black formal attire, subdued expressions.

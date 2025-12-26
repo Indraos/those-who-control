@@ -1,0 +1,4 @@
+reportlab
+qrcode[pil]
+python-dotenv
+requests

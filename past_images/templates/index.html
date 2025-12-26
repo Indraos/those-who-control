@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Past</h1>
+        <p class="subtitle">Upload a reference image and target image to remove the person</p>
+
+        <form id="uploadForm">
+            <div class="upload-section">
+                <h2>Step 1: Reference Image</h2>
+                <div class="file-input-wrapper">
+                    <input type="file" id="referenceInput" accept="image/*" required>
+                    <label for="referenceInput" class="file-input-label" id="referenceLabel">
+                        Click to upload reference image of person to remove
+                    </label>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <h2>Step 2: Target Image</h2>
+                <div class="file-input-wrapper">
+                    <input type="file" id="targetsInput" accept="image/*" required>
+                    <label for="targetsInput" class="file-input-label" id="targetsLabel">
+                        Click to upload image to process
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn" disabled>Loading models...</button>
+        </form>
+
+        <div class="spinner" id="spinner"></div>
+        <div id="status" class="status processing">Initializing AI models...</div>
+    </div>
+
+    <script src="{{ url_for('static', path='/script.js') }}"></script>
+</body>
+</html>
